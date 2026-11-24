@@ -1,10 +1,9 @@
 version: '3.9'
 
 services:
-
   frontend:
     build:
-      context: ./frontend
+      context: ./Frontend
     ports:
       - "3000:80"
     depends_on:
@@ -12,22 +11,24 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./django_backend
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
-      MONGO_URI: mongodb://mongo:27017/crop_optimizer
+      - PORT=5001
+      - DEBUG=False
+      - ALLOWED_HOSTS=*
+      - MONGO_URI=${MONGO_URI:-}
+      - OPENCAGE_API_KEY=${OPENCAGE_API_KEY:-}
+      - WEATHER_API_KEY=${WEATHER_API_KEY:-}
+      - DATA_GOV_API_KEY=${DATA_GOV_API_KEY:-}
+      - REDIS_URI=redis://redis:6379/0
     depends_on:
-      - mongo
+      - redis
 
-  mongo:
-    image: mongo:7
-    container_name: mongodb
+  redis:
+    image: redis:7-alpine
+    container_name: agro_redis_cache
     restart: always
     ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
+      - "6379:6379"

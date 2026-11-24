@@ -55,7 +55,8 @@ export default function Prices() {
   const fetchPrices = async () => {
     setIsRefreshing(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/prices");
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+      const res = await axios.get(`${apiUrl}/prices`);
       if (res.data.success) {
         const fetchedPrices = res.data.data.prices;
         const merged = fetchedPrices.map(fp => {

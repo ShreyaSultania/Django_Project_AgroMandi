@@ -92,7 +92,8 @@ export default function Weather() {
     setLoading(true);
     setError(null);
     try {
-      let url = `http://localhost:5000/api/weather?`;
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+      let url = `${apiUrl}/weather?`;
       if (lat && lon) {
         url += `lat=${lat}&lon=${lon}`;
       } else {
